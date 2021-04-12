@@ -103,40 +103,6 @@ Resources:
         Ref: Api
       StageName: !Sub "${stage}"
         
-  ApiUsagePlan:
-    Type: AWS::ApiGateway::UsagePlan
-    Properties:
-      ApiStages:
-      - ApiId: !Ref Api
-        Stage: !Ref ApiStage 
-      Description: !Sub "${application} api usage plan"
-      Quota:
-        Limit: 30000
-        Period: MONTH
-      Throttle:
-        BurstLimit: 3 # per second
-        RateLimit: 1 # per second
-      UsagePlanName: !Sub "${application}-usage-plan" 
-
-  ApiKey: 
-    Type: "AWS::ApiGateway::ApiKey"
-    DependsOn: 
-      - "ApiDeployment"
-      - "Api"
-    Properties: 
-      Name: !Sub "${application}-user"
-      Description: "CloudFormation created API Key"
-      Enabled: "true"
-
-  ApiUsagePlanKeyExampleUser:
-    Type: AWS::ApiGateway::UsagePlanKey
-    DependsOn: 
-      - "ApiKey"
-    Properties : 
-      KeyId: !Ref ApiKey
-      KeyType: API_KEY
-      UsagePlanId: !Ref ApiUsagePlan 
-
   Api:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -169,8 +135,7 @@ Resources:
                   description: "200 response"
                   schema:
                     $ref: "#/definitions/Empty"
-              security:
-                - api_key: []
+              security: []   # No security
               x-amazon-apigateway-integration:
                 responses:
                   default:
@@ -210,11 +175,6 @@ Resources:
                 httpMethod: "POST"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
-        securityDefinitions:
-          api_key:
-            type: "apiKey"
-            name: "x-api-key"
-            in: "header"
         definitions:
           Empty:
             type: "object"
