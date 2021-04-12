@@ -74,7 +74,7 @@ Resources:
       FunctionName: !Ref LambdaFunction
       Principal: apigateway.amazonaws.com
       ## * below allows the Aws Console API Gateway Test to work. 
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/GET/${path}"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/POST/${path}"
       
   ## create the deployment of a stage (so that the stage is published to an https url)
   ApiDeployment:
@@ -94,7 +94,7 @@ Resources:
       Description: !Sub "stage for ${stage}"
       MethodSettings:
         - ResourcePath: !Sub "/${path}"
-          HttpMethod: GET
+          HttpMethod: POST
           MetricsEnabled: 'true'
           #DataTraceEnabled: 'true'
           ThrottlingBurstLimit: '999'
@@ -154,9 +154,9 @@ Resources:
         - "https"
         paths:
           /do:
-            get:
+            post:
               consumes:
-              - "application/json"
+              - "application/yaml"
               produces:
               - "text/plain"
               parameters:

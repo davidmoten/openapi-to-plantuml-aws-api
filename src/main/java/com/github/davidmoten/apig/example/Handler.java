@@ -3,7 +3,7 @@ package com.github.davidmoten.apig.example;
 import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.github.davidmoten.aws.helper.StandardRequestBodyPassThrough;
+import com.github.davidmoten.oas3.puml.Converter;
 
 public class Handler {
 
@@ -11,12 +11,8 @@ public class Handler {
 
         // expects full request body passthrough from api gateway integration
         // request
-        StandardRequestBodyPassThrough request = StandardRequestBodyPassThrough.from(input);
-
-        String name = request.queryStringParameter("name")
-                .orElseThrow(() -> new IllegalArgumentException("parameter 'name' not found"));
-
-        return "Hello " + name;
+        String body = (String) input.get("body");
+        return Converter.openApiToPuml(body);
 
     }
 }
