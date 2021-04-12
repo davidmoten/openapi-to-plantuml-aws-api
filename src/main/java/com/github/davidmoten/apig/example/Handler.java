@@ -11,7 +11,7 @@ public class Handler {
 
         // expects full request body passthrough from api gateway integration
         // request
-        String body = (String) input.get("body");
+        String body = (String) input.get("body-json");
         return Converter.openApiToPuml(body);
 
     }
