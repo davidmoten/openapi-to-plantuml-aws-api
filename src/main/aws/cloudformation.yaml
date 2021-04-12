@@ -1,0 +1,221 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+
+  stage:
+    Default: dev
+    Description: api stage
+    Type: String
+    MinLength: 1
+    MaxLength: 255
+    
+  artifactBucket:
+    Default: artifacts
+    Type: String
+  
+  artifactObjectName:
+    Default: artifact-6.0-SNAPSHOT.jar
+    Type: String
+    
+  application:
+    Default: application
+    Type: String
+    
+  handler:
+    Default: com.github.davidmoten.apig.example.Handler::handle
+    Type: String
+    
+  path: 
+    Default: do
+    Type: String
+
+Resources:
+
+  LambdaFunctionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: !Sub '${application}'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Sub '${artifactBucket}'
+        S3Key: !Sub '${artifactObjectName}'
+      FunctionName: !Sub '${application}'
+      Handler: !Sub '${handler}'
+      MemorySize: 512
+      Timeout: 300 # seconds
+      Role: !GetAtt 
+        - LambdaFunctionRole
+        - Arn
+      Runtime: java8
+      Environment:
+        Variables:
+          WHO: !Sub "${application}"
+          
+  ## give the /do api gateway resource permission to execute the lambda
+  ApiGatewayInvokeApiGetLambdaPermission: 
+    Type: "AWS::Lambda::Permission"
+    DependsOn:
+    - Api
+    - LambdaFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref LambdaFunction
+      Principal: apigateway.amazonaws.com
+      ## * below allows the Aws Console API Gateway Test to work. 
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/GET/${path}"
+      
+  ## create the deployment of a stage (so that the stage is published to an https url)
+  ApiDeployment:
+    Type: "AWS::ApiGateway::Deployment"
+    Properties:
+      Description: !Sub "deployment of stage ${stage}"
+      RestApiId:
+        Ref: Api
+      StageName: !Sub "${stage}Dummy" # must be different from stage name below (see https://blog.jayway.com/2016/08/17/introduction-to-cloudformation-for-api-gateway/)
+  
+  ## create the stage
+  ApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      DeploymentId: 
+        Ref: ApiDeployment
+      Description: !Sub "stage for ${stage}"
+      MethodSettings:
+        - ResourcePath: !Sub "/${path}"
+          HttpMethod: GET
+          MetricsEnabled: 'true'
+          #DataTraceEnabled: 'true'
+          ThrottlingBurstLimit: '999'
+          #LoggingLevel: INFO
+      RestApiId: 
+        Ref: Api
+      StageName: !Sub "${stage}"
+        
+  ApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+      - ApiId: !Ref Api
+        Stage: !Ref ApiStage 
+      Description: !Sub "${application} api usage plan"
+      Quota:
+        Limit: 30000
+        Period: MONTH
+      Throttle:
+        BurstLimit: 3 # per second
+        RateLimit: 1 # per second
+      UsagePlanName: !Sub "${application}-usage-plan" 
+
+  ApiKey: 
+    Type: "AWS::ApiGateway::ApiKey"
+    DependsOn: 
+      - "ApiDeployment"
+      - "Api"
+    Properties: 
+      Name: !Sub "${application}-user"
+      Description: "CloudFormation created API Key"
+      Enabled: "true"
+
+  ApiUsagePlanKeyExampleUser:
+    Type: AWS::ApiGateway::UsagePlanKey
+    DependsOn: 
+      - "ApiKey"
+    Properties : 
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref ApiUsagePlan 
+
+  Api:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub "${application}"
+      Description: !Sub "${application} rest api"
+      FailOnWarnings: true
+      Body:
+        swagger: "2.0"
+        info:
+          version: "2017-03-30T22:50:37Z"
+          title: "${application}"
+        host: !Sub "application.execute-api.ap-southeast-2.amazonaws.com"
+        basePath: !Sub "/${stage}"
+        schemes:
+        - "https"
+        paths:
+          /do:
+            get:
+              consumes:
+              - "application/json"
+              produces:
+              - "text/plain"
+              parameters:
+              - name: "name"
+                in: "query"
+                required: true
+                type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  schema:
+                    $ref: "#/definitions/Empty"
+              security:
+                - api_key: []
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                    responseTemplates:
+                      ## this bit of weirdness is so quoted text doesn't get returned (json)
+                      text/plain: "#set($inputRoot = $input.path('$')) \n$inputRoot"
+                requestTemplates:
+                  application/json: "##  See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html\n\
+                    ##  This template will pass through all parameters including path, querystring,\
+                    \ header, stage variables, and context through to the integration endpoint\
+                    \ via the body/payload\n#set($allParams = $input.params())\n{\n\"body-json\"\
+                    \ : $input.json('$'),\n\"params\" : {\n#foreach($type in $allParams.keySet())\n\
+                    \    #set($params = $allParams.get($type))\n\"$type\" : {\n    #foreach($paramName\
+                    \ in $params.keySet())\n    \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\
+                    \n        #if($foreach.hasNext),#end\n    #end\n}\n    #if($foreach.hasNext),#end\n\
+                    #end\n},\n\"stage-variables\" : {\n#foreach($key in $stageVariables.keySet())\n\
+                    \"$key\" : \"$util.escapeJavaScript($stageVariables.get($key))\"\n   \
+                    \ #if($foreach.hasNext),#end\n#end\n},\n\"context\" : {\n    \"account-id\"\
+                    \ : \"$context.identity.accountId\",\n    \"api-id\" : \"$context.apiId\"\
+                    ,\n    \"api-key\" : \"$context.identity.apiKey\",\n    \"authorizer-principal-id\"\
+                    \ : \"$context.authorizer.principalId\",\n    \"caller\" : \"$context.identity.caller\"\
+                    ,\n    \"cognito-authentication-provider\" : \"$context.identity.cognitoAuthenticationProvider\"\
+                    ,\n    \"cognito-authentication-type\" : \"$context.identity.cognitoAuthenticationType\"\
+                    ,\n    \"cognito-identity-id\" : \"$context.identity.cognitoIdentityId\"\
+                    ,\n    \"cognito-identity-pool-id\" : \"$context.identity.cognitoIdentityPoolId\"\
+                    ,\n    \"http-method\" : \"$context.httpMethod\",\n    \"stage\" : \"\
+                    $context.stage\",\n    \"source-ip\" : \"$context.identity.sourceIp\"\
+                    ,\n    \"user\" : \"$context.identity.user\",\n    \"user-agent\" : \"\
+                    $context.identity.userAgent\",\n    \"user-arn\" : \"$context.identity.userArn\"\
+                    ,\n    \"request-id\" : \"$context.requestId\",\n    \"resource-id\" :\
+                    \ \"$context.resourceId\",\n    \"resource-path\" : \"$context.resourcePath\"\
+                    \n    }\n}\n"
+                # escape the substitution using ! before stageVariables.function
+                uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${application}/invocations"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+        securityDefinitions:
+          api_key:
+            type: "apiKey"
+            name: "x-api-key"
+            in: "header"
+        definitions:
+          Empty:
+            type: "object"
+
