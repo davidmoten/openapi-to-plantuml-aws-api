@@ -19,6 +19,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <timestamp>${maven.build.timestamp}</timestamp>
         <timestampSuffix>-${timestamp}</timestampSuffix>
+        <siteBucketName>${application}-site</siteBucketName>
     </properties>
     <dependencies>
         <dependency>
@@ -89,6 +90,7 @@
                             <parameters>
                                 <artifactBucket>${artifact.bucket}-${aws.account.id.lowercase}</artifactBucket>
                                 <artifactObjectName>${project.artifactId}-${project.version}${timestampSuffix}.jar</artifactObjectName>
+                                <siteBucketName>${siteBucketName}</siteBucketName>
                                 <stage>api</stage>
                                 <application>${application}</application>
                             </parameters>
@@ -109,6 +111,23 @@
                             <region>${region}</region>
                             <restApiName>${application}</restApiName>
                             <stage>api</stage>
+                            <!-- optional proxy config -->
+                            <httpsProxyHost>${proxy.host}</httpsProxyHost>
+                            <httpsProxyPort>${proxy.port}</httpsProxyPort>
+                        </configuration>
+                    </execution>
+                    <!-- deploy website -->
+                    <execution>
+                        <id>s3</id>
+                        <goals>
+                            <goal>deployS3</goal>
+                        </goals>
+                        <configuration>
+                            <serverId>${server.id}</serverId>
+                            <region>${region}</region>
+                            <inputDirectory>src/main/webapp</inputDirectory>
+                            <bucketName>${siteBucketName}</bucketName>
+                            <outputBasePath />
                             <!-- optional proxy config -->
                             <httpsProxyHost>${proxy.host}</httpsProxyHost>
                             <httpsProxyPort>${proxy.port}</httpsProxyPort>

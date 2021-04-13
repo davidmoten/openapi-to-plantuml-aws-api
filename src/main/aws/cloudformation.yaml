@@ -17,6 +17,10 @@ Parameters:
     Default: artifact-6.0-SNAPSHOT.jar
     Type: String
     
+  siteBucket:
+    Default: site
+    Type: String
+    
   application:
     Default: application
     Type: String
@@ -30,6 +34,18 @@ Parameters:
     Type: String
 
 Resources:
+
+  ## install the public bucket that serves the docs
+  BucketCtsGatewayPublicResources:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: !Sub "$[siteBucket}"
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+
 
   LambdaFunctionRole:
     Type: 'AWS::IAM::Role'
@@ -114,11 +130,35 @@ Resources:
         info:
           version: "2017-03-30T22:50:37Z"
           title: "${application}"
-        host: !Sub "application.execute-api.ap-southeast-2.amazonaws.com"
+        host: !Sub "application.execute-api.${AWS::Region}.amazonaws.com"
         basePath: !Sub "/${stage}"
         schemes:
         - "https"
         paths:
+          /site/{proxy+}:
+            x-amazon-apigateway-any-method:
+              produces:
+              - "application/json"
+              parameters:
+              - name: "proxy"
+                in: "path"
+                required: true
+                type: "string"
+              responses: {}
+              x-amazon-apigateway-integration:
+                responses:
+                  default:
+                    statusCode: "200"
+                requestParameters:
+                  integration.request.path.proxy: "method.request.path.proxy"
+                uri: !Sub "http://${siteBucket}.s3-website-${AWS::Region}.amazonaws.com/{proxy}"
+                passthroughBehavior: "when_no_match"
+                httpMethod: "ANY"
+                cacheNamespace: "34xt32"
+                cacheKeyParameters:
+                - "method.request.path.proxy"
+                contentHandling: "CONVERT_TO_BINARY"
+                type: "http_proxy"
           /do:
             post:
               consumes:
