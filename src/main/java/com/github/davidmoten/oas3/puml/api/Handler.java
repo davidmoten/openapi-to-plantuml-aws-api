@@ -1,11 +1,11 @@
-package com.github.davidmoten.apig.example;
+package com.github.davidmoten.oas3.puml.api;
 
 import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.github.davidmoten.oas3.puml.Converter;
 
-public class Handler {
+public final class Handler {
 
     public String handle(Map<String, Object> input, Context context) {
 

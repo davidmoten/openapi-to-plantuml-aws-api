@@ -26,11 +26,13 @@ Parameters:
     Type: String
     
   handler:
-    Default: com.github.davidmoten.apig.example.Handler::handle
     Type: String
     
   path: 
     Default: do
+    Type: String
+    
+  publicS3Bucket:
     Type: String
 
 Resources:
