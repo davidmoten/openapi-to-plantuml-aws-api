@@ -110,7 +110,7 @@
                                 <siteBucketName>${siteBucketName}</siteBucketName>
                                 <stage>api</stage>
                                 <application>${application}</application>
-                                <handler>com.github.davidmoten.oas3.puml.Handler::handle</handler>
+                                <handler>com.github.davidmoten.oas3.puml.api.Handler::handle</handler>
                                 <siteBucketName>${siteBucketName}</siteBucketName>
                             </parameters>
                             <template>src/main/aws/cloudformation.yaml</template>
