@@ -17,10 +17,6 @@ Parameters:
     Default: artifact-6.0-SNAPSHOT.jar
     Type: String
     
-  siteBucket:
-    Default: site
-    Type: String
-    
   application:
     Default: application
     Type: String
@@ -32,7 +28,7 @@ Parameters:
     Default: do
     Type: String
     
-  publicS3Bucket:
+  siteBucketName:
     Type: String
 
 Resources:
@@ -42,7 +38,7 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
     Properties:
-      BucketName: !Sub "$[siteBucket}"
+      BucketName: !Sub "${siteBucketName}"
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
@@ -153,7 +149,7 @@ Resources:
                     statusCode: "200"
                 requestParameters:
                   integration.request.path.proxy: "method.request.path.proxy"
-                uri: !Sub "http://${siteBucket}.s3-website-${AWS::Region}.amazonaws.com/{proxy}"
+                uri: !Sub "http://${siteBucketName}.s3-website-${AWS::Region}.amazonaws.com/{proxy}"
                 passthroughBehavior: "when_no_match"
                 httpMethod: "ANY"
                 cacheNamespace: "34xt32"

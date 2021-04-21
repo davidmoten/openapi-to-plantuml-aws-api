@@ -19,8 +19,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <timestamp>${maven.build.timestamp}</timestamp>
         <timestampSuffix>-${timestamp}</timestampSuffix>
-        <siteBucketName>${application}-site</siteBucketName>
-        <public.s3.bucket>${application}-public-${aws.account.id.lowercase}</public.s3.bucket>
+        <siteBucketName>${application}-site-${aws.account.id.lowercase}</siteBucketName>
     </properties>
     <dependencies>
         <dependency>
@@ -69,7 +68,7 @@
                         <configuration>
                             <serverId>${server.id}</serverId>
                             <region>${region}</region>
-                            <bucketName>${public.s3.bucket}</bucketName>
+                            <bucketName>${siteBucketName}</bucketName>
                             <create>true</create>
                             <file>src/main/webapp/index.html</file>
                             <objectName>index.html</objectName>
@@ -112,7 +111,7 @@
                                 <stage>api</stage>
                                 <application>${application}</application>
                                 <handler>com.github.davidmoten.oas3.puml.Handler::handle</handler>
-                                <publicS3Bucket>${public.s3.bucket}</publicS3Bucket>
+                                <siteBucketName>${siteBucketName}</siteBucketName>
                             </parameters>
                             <template>src/main/aws/cloudformation.yaml</template>
                             <intervalSeconds>2</intervalSeconds>
