@@ -146,7 +146,8 @@
                             <region>${region}</region>
                             <inputDirectory>src/main/webapp</inputDirectory>
                             <bucketName>${siteBucketName}</bucketName>
-                            <outputBasePath />
+                            <outputBasePath></outputBasePath>
+                            <publicRead>true</publicRead>
                             <!-- optional proxy config -->
                             <httpsProxyHost>${proxy.host}</httpsProxyHost>
                             <httpsProxyPort>${proxy.port}</httpsProxyPort>
