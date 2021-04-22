@@ -82,12 +82,7 @@ Resources:
       Environment:
         Variables:
           WHO: !Sub "${application}"
-          
-  myCertificate:
-    Type: 'AWS::CertificateManager::Certificate'
-    Properties:
-      DomainName: !Ref domainName
-      
+             
   myDomainName:
     Type: 'AWS::ApiGateway::DomainName'
     Properties:
