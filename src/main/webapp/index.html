@@ -7,7 +7,8 @@ function convert() {
 	    if (this.readyState != 4) return;
 	
 	    if (this.status == 200) {
-	        document.getElementById("puml").value = this.responseText;
+	    	var resp = JSON.parse(this.responseText);
+	        document.getElementById("puml").value = resp.puml;
 	    }
     };
 	xhr.open("POST", "../do", true);

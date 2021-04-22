@@ -162,7 +162,7 @@ Resources:
               consumes:
               - "application/yaml"
               produces:
-              - "text/plain"
+              - "application/json"
               parameters:
               - name: "name"
                 in: "query"
