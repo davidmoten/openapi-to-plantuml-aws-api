@@ -1,5 +1,89 @@
 <html>
+<head>
+<script>
+function convert() {
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function () {
+	    if (this.readyState != 4) return;
+	
+	    if (this.status == 200) {
+	        var data = JSON.parse(this.responseText);
+		    console.log(data);
+	        // we get the returned data
+	    }
+	
+	    // end of state change: it can be after some time (async)
+    };
+
+	
+	xhr.open("POST", "do", true);
+	xhr.setRequestHeader('Content-Type', 'application/yaml');
+	xhr.send(JSON.stringify({
+	    value: document.getElementById("oas").value
+	}));
+}
+</script>
+</head>
 <body>
-<h2>Converter of OpenApi 3.0 definitions to Plant UML</h2>
+<h2>Convert OpenApi 3.0 definitions to Plant UML</h2>
+<p>Uses the <a href="https://github.com/davidmoten/openapi-to-plantuml">openapi-to-plantuml</a> java library.</p>
+<textarea id="oas" style="width:100%;height:40%">
+openapi: 3.0.1
+info:
+  title: unit test
+  version: 0.0.1
+components:
+  schemas:
+    # in plantuml need to set namespaceChar none so that grouping doesn't happen on the dot in class name
+    My.Customer:
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        secret:
+          type: string
+          format: password
+        email:
+          type: string
+          format: email
+        id:
+          type: string
+          format: uuid
+        history:
+          type: string
+          format: binary
+        history2:
+          type: string
+          format: byte
+        heightMetres:
+          type: number
+        dateOfBirth:
+          type: string
+          format: date
+        lastSessionTime:
+          type: string
+          format: date-time  
+        numberOfChildren:
+          type: integer        
+        alive:
+          type: boolean
+        nicknames:
+          type: array
+          items: 
+            type: string
+        favouriteNumbers:
+          type: array
+          items:
+            type: integer 
+        picture:
+          type: string
+          format: binary
+      required:
+      - firstName
+      - lastName
+      - dateOfBirth
+</textarea>
+<button style="margin:10px" onclick="convert()">Convert to PlantUML Text</button>
 </body>
 </html>
