@@ -3,10 +3,11 @@
 <script>
 
 function onload() {
-    document.getElementById("png").style.display='none';
+    document.getElementById("response").style.display='none';
 }
 
 function convert() {
+    document.getElementById("response").style.display = 'none';
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function () {
 	    if (this.readyState != 4) return;
@@ -17,12 +18,11 @@ function convert() {
 	        puml.value = resp.puml;
 	        var png = document.getElementById("png");
 	        png.href = 'https://planttext.com/api/plantuml/img/' + resp.encoded;
-	        png.style.display='block';
 	        var svg = document.getElementById('svg'); 
 	        svg.href='https://www.planttext.com/api/plantuml/svg/' + resp.encoded;
-	        svg.style.display='block';
 	        var svgimg = document.getElementById('svgimg');
 	        svgimg.src = svg.href;
+	        document.getElementById("response").style.display = 'block';
 	    }
     };
 	xhr.open("POST", "../do", true);
@@ -93,9 +93,12 @@ components:
       - lastName
       - dateOfBirth
 </textarea>
-<button style="margin:10px" onclick="convert()">Convert to PlantUML Text</button><div><a id="png" href="">PNG</a>&nbsp;<a id="svg" href="">SVG</a></div><br/>
+<button style="margin:10px" onclick="convert()">Convert to PlantUML Text</button>
+<div id="response">
+<a id="png" href="">PNG</a>&nbsp;<a id="svg" href="">SVG</a></div><br/>
 <img id="svgimg" src="" alt="image"/><br/>
-<textarea id="puml" style="width:100%;height:40%">
+<textarea id="puml" readonly style="width:100%;height:40%">
 </textarea>
+</div>
 </body>
 </html>
