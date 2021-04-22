@@ -7,15 +7,9 @@ function convert() {
 	    if (this.readyState != 4) return;
 	
 	    if (this.status == 200) {
-	        var data = JSON.parse(this.responseText);
-		    console.log(data);
-	        // we get the returned data
+	        document.getElementById("puml").value = this.responseText;
 	    }
-	
-	    // end of state change: it can be after some time (async)
     };
-
-	
 	xhr.open("POST", "../do", true);
 	xhr.setRequestHeader('Content-Type', 'application/yaml');
 	xhr.send(
@@ -84,6 +78,8 @@ components:
       - lastName
       - dateOfBirth
 </textarea>
-<button style="margin:10px" onclick="convert()">Convert to PlantUML Text</button>
+<button style="margin:10px" onclick="convert()">Convert to PlantUML Text</button><br/>
+<textarea id="puml" style="width:100%;height:40%">
+</textarea>
 </body>
 </html>
