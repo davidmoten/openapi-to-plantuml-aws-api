@@ -11,9 +11,14 @@ function convert() {
 	
 	    if (this.status == 200) {
 	    	var resp = JSON.parse(this.responseText);
-	        document.getElementById("puml").value = resp.puml;
-	        document.getElementById("png").href = 'https://planttext.com/api/plantuml/img/' + resp.encoded;
-	        document.getElementById("png").style.display='block'; 
+	    	var puml = document.getElementById("puml");
+	        puml.value = resp.puml;
+	        var png = document.getElementById("png");
+	        png.href = 'https://planttext.com/api/plantuml/img/' + resp.encoded;
+	        png.style.display='block';
+	        var svg = document.getElementById('svg'); 
+	        svg.href='https://www.planttext.com/api/plantuml/svg/' + resp.encoded;
+	        svg.style.display='block';
 	    }
     };
 	xhr.open("POST", "../do", true);
@@ -84,7 +89,7 @@ components:
       - lastName
       - dateOfBirth
 </textarea>
-<button style="margin:10px" onclick="convert()">Convert to PlantUML Text</button><div><a id="png" href="">PNG</a></div><br/>
+<button style="margin:10px" onclick="convert()">Convert to PlantUML Text</button><div><a id="png" href="">PNG</a>&nbsp;<a id="png" href="">SVG</a></div><br/>
 <textarea id="puml" style="width:100%;height:40%">
 </textarea>
 </body>
