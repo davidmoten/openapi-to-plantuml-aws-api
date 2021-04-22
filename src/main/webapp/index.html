@@ -18,9 +18,9 @@ function convert() {
 	
 	xhr.open("POST", "../do", true);
 	xhr.setRequestHeader('Content-Type', 'application/yaml');
-	xhr.send(JSON.stringify({
-	    value: document.getElementById("oas").value
-	}));
+	xhr.send(
+	    document.getElementById("oas").value
+	);
 }
 </script>
 </head>
