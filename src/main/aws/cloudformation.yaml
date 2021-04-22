@@ -30,8 +30,14 @@ Parameters:
     
   siteBucketName:
     Type: String
+    
+  domainName:
+    Default: openapi-to-plantuml.davidmoten.org
+    Type: String
 
 Resources:
+
+# 	arn:aws:acm:ap-southeast-2:791394749990:certificate/3f65b280-6024-47d4-a36d-0d75623adc65
 
   ## install the public bucket that serves the docs
   BucketCtsGatewayPublicResources:
@@ -76,6 +82,24 @@ Resources:
       Environment:
         Variables:
           WHO: !Sub "${application}"
+          
+  myCertificate:
+    Type: 'AWS::CertificateManager::Certificate'
+    Properties:
+      DomainName: !Ref domainName
+      
+  myDomainName:
+    Type: 'AWS::ApiGateway::DomainName'
+    Properties:
+      CertificateArn: !Ref myCertificate
+      DomainName: !Ref domainName
+      
+  myMapping:
+    Type: 'AWS::ApiGateway::BasePathMapping'
+    Properties:
+      BasePath: api # stage name
+      DomainName: !Ref myDomainName
+      RestApiId: !Ref Api
           
   ## give the /do api gateway resource permission to execute the lambda
   ApiGatewayInvokeApiGetLambdaPermission: 
