@@ -32,7 +32,7 @@ Parameters:
     Type: String
     
   domainName:
-    Default: openapi-to-plantuml.davidmoten.org
+    Default: openapi-to-puml.davidmoten.org
     Type: String
 
 Resources:
