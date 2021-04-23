@@ -87,7 +87,7 @@ Resources:
     Type: 'AWS::ApiGateway::DomainName'
     Properties:
       # CertificateArn: !Ref myCertificate
-      CertificateArn: arn:aws:acm:us-east-1:791394749990:certificate/c6497c03-7f3d-42f5-8f54-774d50762f58
+      RegionalCertificateArn: arn:aws:acm:us-east-1:791394749990:certificate/c6497c03-7f3d-42f5-8f54-774d50762f58
       DomainName: !Ref domainName
       
   myMapping:
