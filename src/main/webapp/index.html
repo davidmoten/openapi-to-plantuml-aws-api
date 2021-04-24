@@ -7,7 +7,8 @@ function onload() {
 }
 
 function convert() {
-    document.getElementById("response").style.display = 'none';
+    hide(document.getElementById("response"));
+    hide(document.getElementById("error"));
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function () {
 	    if (this.readyState != 4) return;
@@ -22,7 +23,10 @@ function convert() {
 	        svg.href='https://www.planttext.com/api/plantuml/svg/' + resp.encoded;
 	        var svgimg = document.getElementById('svgimg');
 	        svgimg.src = svg.href;
-	        document.getElementById("response").style.display = 'block';
+	        show(document.getElementById("response"));
+	    } else {
+	        document.getElementById("error").innerHTML= "<pre>Returned status code: " + this.status + "\n" + this.responseText + "</pre>";
+	        show(document.getElementById("error"));
 	    }
     };
 	xhr.open("POST", "../do", true);
@@ -31,6 +35,14 @@ function convert() {
 	    document.getElementById("oas").value
 	);
 }
+
+function show(element) {
+    element.style.display = 'block';
+}
+
+function hide(element) {
+    element.style.display = 'none';
+}    
 </script>
 </head>
 <body onload="onload()">
@@ -207,6 +219,7 @@ components:
           type: string
 </textarea>
 <button style="margin:10px;box-sizing: border-box" onclick="convert()">Convert</button>
+<div id="error" style="color:red"></div>
 <div id="response">
 <a id="png" href="">PNG</a>&nbsp;<a id="svg" href="">SVG</a><br/>
 <img id="svgimg" src="" alt="image"/><br/>
