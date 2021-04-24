@@ -95,9 +95,9 @@ Resources:
     Properties:
       DomainName: openapi-to-puml.davidmoten.org
       DomainNameConfigurations:
-        - EndpointType: EDGE
-          CertificateArn: >-
-            arn:aws:acm:us-east-1:791394749990:certificate/c6497c03-7f3d-42f5-8f54-774d50762f58
+        - EndpointType: REGIONAL
+            # arn:aws:acm:us-east-1:791394749990:certificate/c6497c03-7f3d-42f5-8f54-774d50762f58
+          CertificateArn: arn:aws:acm:ap-southeast-2:791394749990:certificate/3f65b280-6024-47d4-a36d-0d75623adc65
           CertificateName: openapi-to-puml.davidmoten.org
       
   myMapping:
