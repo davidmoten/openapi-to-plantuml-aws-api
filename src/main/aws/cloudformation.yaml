@@ -87,7 +87,7 @@ Resources:
   ApiGatewayInvokeApiGetLambdaPermission: 
     Type: "AWS::Lambda::Permission"
     DependsOn:
-    - Api
+    - RestApi
     - LambdaFunction
     Properties:
       Action: lambda:InvokeFunction
@@ -102,7 +102,7 @@ Resources:
     Properties:
       Description: !Sub "deployment of stage ${stage}"
       RestApiId:
-        Ref: Api
+        Ref: RestApi
       StageName: !Sub "${stage}Dummy" # must be different from stage name below (see https://blog.jayway.com/2016/08/17/introduction-to-cloudformation-for-api-gateway/)
   
   ## create the stage
@@ -120,10 +120,10 @@ Resources:
           ThrottlingBurstLimit: '999'
           #LoggingLevel: INFO
       RestApiId: 
-        Ref: Api
+        Ref: RestApi
       StageName: !Sub "${stage}"
         
-  Api:
+  RestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: !Sub "${application}"
@@ -238,5 +238,5 @@ Resources:
     Properties:
       BasePath: api # stage name
       DomainName: !Ref myDomainName
-      RestApiId: !Ref Api
+      RestApiId: !Ref RestApi
           
