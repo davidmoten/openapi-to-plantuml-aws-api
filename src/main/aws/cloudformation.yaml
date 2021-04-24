@@ -236,7 +236,7 @@ Resources:
   myMapping:
     Type: 'AWS::ApiGateway::BasePathMapping'
     Properties:
-      BasePath: !Sub "$[]stage}"
+      BasePath: prod
       DomainName: !Ref myDomainName
       RestApiId: !Ref RestApi
           
