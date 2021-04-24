@@ -114,7 +114,7 @@
                                 <artifactBucket>${artifact.bucket}-${aws.account.id.lowercase}</artifactBucket>
                                 <artifactObjectName>${project.artifactId}-${project.version}${timestampSuffix}.jar</artifactObjectName>
                                 <siteBucketName>${siteBucketName}</siteBucketName>
-                                <stage>api</stage>
+                                <stage>prod</stage>
                                 <application>${application}</application>
                                 <handler>com.github.davidmoten.oas3.puml.api.Handler::handle</handler>
                                 <siteBucketName>${siteBucketName}</siteBucketName>
