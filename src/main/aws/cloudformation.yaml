@@ -83,30 +83,6 @@ Resources:
         Variables:
           WHO: !Sub "${application}"
              
-#   myDomainName:
-#     Type: 'AWS::ApiGateway::DomainName'
-#     Properties:
-#       #CertificateArn: !Ref myCertificate
-#       CertificateArn: arn:aws:acm:us-east-1:791394749990:certificate/c6497c03-7f3d-42f5-8f54-774d50762f58
-#       DomainName: 'openapi-to-puml.davidmoten.org'
-      
-  myDomainName:
-    Type: 'AWS::ApiGatewayV2::DomainName'
-    Properties:
-      DomainName: openapi-to-puml.davidmoten.org
-      DomainNameConfigurations:
-        - EndpointType: REGIONAL
-            # arn:aws:acm:us-east-1:791394749990:certificate/c6497c03-7f3d-42f5-8f54-774d50762f58
-          CertificateArn: arn:aws:acm:ap-southeast-2:791394749990:certificate/3f65b280-6024-47d4-a36d-0d75623adc65
-          CertificateName: openapi-to-puml.davidmoten.org
-      
-  myMapping:
-    Type: 'AWS::ApiGateway::BasePathMapping'
-    Properties:
-      BasePath: api # stage name
-      DomainName: !Ref myDomainName
-      RestApiId: !Ref Api
-          
   ## give the /do api gateway resource permission to execute the lambda
   ApiGatewayInvokeApiGetLambdaPermission: 
     Type: "AWS::Lambda::Permission"
@@ -247,3 +223,20 @@ Resources:
           Empty:
             type: "object"
 
+  myDomainName:
+    Type: 'AWS::ApiGatewayV2::DomainName'
+    Properties:
+      DomainName: openapi-to-puml.davidmoten.org
+      DomainNameConfigurations:
+        - EndpointType: REGIONAL
+            # arn:aws:acm:us-east-1:791394749990:certificate/c6497c03-7f3d-42f5-8f54-774d50762f58
+          CertificateArn: arn:aws:acm:ap-southeast-2:791394749990:certificate/3f65b280-6024-47d4-a36d-0d75623adc65
+          CertificateName: openapi-to-puml.davidmoten.org
+      
+  myMapping:
+    Type: 'AWS::ApiGateway::BasePathMapping'
+    Properties:
+      BasePath: api # stage name
+      DomainName: !Ref myDomainName
+      RestApiId: !Ref Api
+          
