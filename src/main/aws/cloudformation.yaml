@@ -25,7 +25,7 @@ Parameters:
     Type: String
     
   path: 
-    Default: convert
+    Default: do
     Type: String
     
   siteBucketName:
@@ -163,7 +163,7 @@ Resources:
                 - "method.request.path.proxy"
                 contentHandling: "CONVERT_TO_BINARY"
                 type: "http_proxy"
-          /convert:
+          /do:
             post:
               consumes:
               - "application/yaml"
