@@ -5,6 +5,10 @@ import java.io.UncheckedIOException;
 import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.github.davidmoten.oas3.puml.Converter;
 
 import io.swagger.v3.core.util.Yaml;
@@ -30,7 +34,13 @@ public final class Handler {
         }
         final String yaml;
         if (body.trim().startsWith("{")) {
-            yaml = Yaml.pretty(body);
+            JsonNode jsonNodeTree;
+            try {
+                jsonNodeTree = new ObjectMapper().readTree(body);
+                yaml = new YAMLMapper().writeValueAsString(jsonNodeTree);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             yaml = body;
         }
