@@ -1,6 +1,6 @@
 # openapi-to-plantuml-aws-api
 
-This is the source for https://openapi-to-puml.davidmoten.org/prod/index.html.
+This is the source for https://openapi-to-puml.davidmoten.org/prod/site/index.html which converts OpenAPI definitions to PlantUML online.
 
 ## Deployment
 
