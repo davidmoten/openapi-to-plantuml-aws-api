@@ -184,12 +184,9 @@ Resources:
               security: []   # No security
               x-amazon-apigateway-integration:
                 responses:
-                  default:
+                  "default":
                     statusCode: "200"
-                    responseTemplates:
-                      ## this bit of weirdness is so quoted text doesn't get returned (json)
-                      text/plain: "#set($inputRoot = $input.path('$')) \n$inputRoot"
-                  java.*:
+                  "java.*":
                     statusCode: "400"
                 requestTemplates:
                   application/yaml: "##  See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html\n\

@@ -16,6 +16,9 @@ public final class Handler {
         // expects full request body passthrough from api gateway integration
         // request
         String body = (String) input.get("body-json");
+        if (body == null||body.trim().length() == 0) {
+            throw new IllegalArgumentException("openapi definition cannot be empty");
+        }
         String puml = Converter.openApiToPuml(body);
         try {
             String encoded = new TranscoderSmart2().encode(puml);
