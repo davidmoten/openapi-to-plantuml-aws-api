@@ -15,8 +15,8 @@ Design
 ## Notes
 Assumption: you have a Route 53 domain name (mine is davidmoten.org)
 
-* In AWS Certificate Manager change to us-east-1 region (essential for apig and certs to work)
-* Create certificate, expand certificate name during wizard and request Route 53 update CNAME records
+* Create certificate in AWS Certificate Manager (your own region is fine, ignore old advice that you need to use us-east-1), *don't* expand certificate name during wizard to request Route 53 update CNAME records because the routing won't use CNAME.
 * make sure user deploying CloudFormation has UpdateDistribution on '*' permission (or Full Access)
 * make sure user deploying CloudFormation has Certificate Manager access (Full will work obviously but you can probably narrow that)
+* Go to Route 53 and add new domain name (as per AWS Certificate Manager) of type A, Alias = Yes, select API Gateway from the dropdown and then select the API Gateway domain name (which is also visible in API Gateway - Custom Domain Names).
 
