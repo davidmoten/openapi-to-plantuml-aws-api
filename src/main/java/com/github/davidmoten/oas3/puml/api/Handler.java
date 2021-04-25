@@ -15,8 +15,16 @@ public final class Handler {
 
         // expects full request body passthrough from api gateway integration
         // request
-        String body = (String) input.get("body-json");
-        if (body == null||body.trim().length() == 0) {
+
+        // when a null body is passed `input.get("body-json") returns a LinkedHashMap
+        // not a String (assumes encoded parameters perhaps?)
+
+        Object bodyJson = input.get("body-json");
+        if (!(bodyJson instanceof String)) {
+            throw new IllegalArgumentException("openapi deinition cannot be empty");
+        }
+        String body = (String) bodyJson;
+        if (body == null || body.trim().length() == 0) {
             throw new IllegalArgumentException("openapi definition cannot be empty");
         }
         String puml = Converter.openApiToPuml(body);
