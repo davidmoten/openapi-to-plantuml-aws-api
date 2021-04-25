@@ -14,16 +14,23 @@ function convert() {
 	    if (this.readyState != 4) return;
 	
 	    if (this.status == 200) {
-	    	var resp = JSON.parse(this.responseText);
-	    	var puml = document.getElementById("puml");
-	        puml.value = resp.puml;
-	        var png = document.getElementById("png");
-	        png.href = 'https://planttext.com/api/plantuml/img/' + resp.encoded;
-	        var svg = document.getElementById('svg'); 
-	        svg.href='https://www.planttext.com/api/plantuml/svg/' + resp.encoded;
-	        var svgimg = document.getElementById('svgimg');
-	        svgimg.src = svg.href;
-	        show(document.getElementById("response"));
+	        var resp;
+	        try {
+	    	    resp = JSON.parse(this.responseText);
+	    	    var puml = document.getElementById("puml");
+		        puml.value = resp.puml;
+		        var png = document.getElementById("png");
+		        png.href = 'https://planttext.com/api/plantuml/img/' + resp.encoded;
+		        var svg = document.getElementById('svg'); 
+		        svg.href='https://www.planttext.com/api/plantuml/svg/' + resp.encoded;
+		        var svgimg = document.getElementById('svgimg');
+		        svgimg.src = svg.href;
+		        show(document.getElementById("response"));
+	    	} catch (error) {
+	    	    // TODO fix api gateway integration so error response is valid json and returns appropriate status code
+	    	    document.getElementById("error").innerHTML= "<pre>" + this.responseText + "</pre>";
+	            show(document.getElementById("error"));
+	    	}
 	    } else {
 	        document.getElementById("error").innerHTML= "<pre>Returned status code: " + this.status + "\n" + this.responseText + "</pre>";
 	        show(document.getElementById("error"));
