@@ -37,10 +37,15 @@ function convert() {
 	    }
     };
 	xhr.open("POST", "../do", true);
-	xhr.setRequestHeader('Content-Type', 'application/yaml');
-	xhr.send(
-	    document.getElementById("oas").value
-	);
+	var oas = document.getElementById("oas").value;
+	var contentType;
+	if (oas.trim().startsWith("{")) {
+	    contentType = 'application/json';
+	} else {
+	    contentType = 'application/yaml';
+	}      
+	xhr.setRequestHeader('Content-Type', contentType);
+	xhr.send(oas);
 }
 
 function show(element) {

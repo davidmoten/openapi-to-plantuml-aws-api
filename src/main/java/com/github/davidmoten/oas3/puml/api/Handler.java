@@ -7,6 +7,7 @@ import java.util.Map;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.github.davidmoten.oas3.puml.Converter;
 
+import io.swagger.v3.core.util.Yaml;
 import net.sourceforge.plantuml.code.TranscoderSmart2;
 
 public final class Handler {
@@ -26,6 +27,12 @@ public final class Handler {
         String body = (String) bodyJson;
         if (body == null || body.trim().length() == 0) {
             throw new IllegalArgumentException("openapi definition cannot be empty");
+        }
+        final String yaml;
+        if (body.trim().startsWith("{")) {
+            yaml = Yaml.pretty(body);
+        } else {
+            yaml = body;
         }
         String puml = Converter.openApiToPuml(body);
         try {
