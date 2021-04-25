@@ -1,8 +1,23 @@
 # openapi-to-plantuml-aws-api
 
-In development
+This is the source for https://openapi-to-puml.davidmoten.org/prod/index.html.
 
-Design
+## Deployment
+
+### Prepare
+
+* Create certificate in AWS Certificate Manager (your own region is fine, ignore old advice that you need to use us-east-1), *don't* expand certificate name during wizard to request Route 53 update CNAME records because the routing won't use CNAME.
+* make sure AWS deploying user deploying CloudFormation has UpdateDistribution on '*' permission (or Full Access)
+* make sure AWS deploying user deploying CloudFormation has Certificate Manager access (Full will work obviously but you can probably narrow that)
+
+### Deploy
+To deploy you need your AWS credential pair (encrypted preferrably but up to you) in `.m2/settings.xml` with the name `my.aws`. If you want to use a different serverId then run the command below with the extra argument `-Dserver.id=<YOUR_SERVER_ID>`.
+
+```bash
+./deploy.sh
+```
+The deploy script does these steps:
+
 * create artifact bucket if does not exist
 * deploy artifact to artifact bucket
 * create public bucket if does not exist
@@ -12,11 +27,6 @@ Design
 * set new domain as alias for apig hostname
 * associate new cert with apig
 
-## Notes
-Assumption: you have a Route 53 domain name (mine is davidmoten.org)
+Then you finish up configuring the new domain name in Route 53 manually (TODO: do this in CloudFormation too):
 
-* Create certificate in AWS Certificate Manager (your own region is fine, ignore old advice that you need to use us-east-1), *don't* expand certificate name during wizard to request Route 53 update CNAME records because the routing won't use CNAME.
-* make sure user deploying CloudFormation has UpdateDistribution on '*' permission (or Full Access)
-* make sure user deploying CloudFormation has Certificate Manager access (Full will work obviously but you can probably narrow that)
 * Go to Route 53 and add new domain name (as per AWS Certificate Manager) of type A, Alias = Yes, select API Gateway from the dropdown and then select the API Gateway domain name (which is also visible in API Gateway - Custom Domain Names).
-
