@@ -43,7 +43,8 @@ function convert() {
 		        svgimg.src = svg.href;
 		        show(document.getElementById("response"));
 	    	} catch (error) {
-	    	    // TODO fix api gateway integration so error response is valid json and returns appropriate status code
+	    	    // TODO fix api gateway integration so error response is valid json (errorMessage and errorType missing quotes)
+	    	    // and returns appropriate status code
 	    	    document.getElementById("error").innerHTML= "<pre>" + this.responseText + "</pre>";
 	            show(document.getElementById("error"));
 	    	}
