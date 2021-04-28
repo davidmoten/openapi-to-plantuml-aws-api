@@ -30,9 +30,13 @@ function convert() {
 	    if (this.readyState != 4) return;
 	
 	    if (this.status == 200) {
-	        var resp;
-	        try {
-	    	    resp = JSON.parse(this.responseText);
+    	    var resp = JSON.parse(this.responseText);
+    	    if (resp.errorMessage!= null) {
+    	        // TODO fix api gateway integration so error response is valid json (errorMessage and errorType missing quotes)
+    	        // and returns appropriate status code
+    	        document.getElementById("error").innerHTML= "<pre>" + resp.errorType + ': ' + resp.errorMessage +  "</pre>";
+                show(document.getElementById("error"));  
+    	    } else {
 	    	    var puml = document.getElementById("puml");
 		        puml.value = resp.puml;
 		        var png = document.getElementById("png");
@@ -42,12 +46,7 @@ function convert() {
 		        var svgimg = document.getElementById('svgimg');
 		        svgimg.src = svg.href;
 		        show(document.getElementById("response"));
-	    	} catch (error) {
-	    	    // TODO fix api gateway integration so error response is valid json (errorMessage and errorType missing quotes)
-	    	    // and returns appropriate status code
-	    	    document.getElementById("error").innerHTML= "<pre>" + this.responseText + "</pre>";
-	            show(document.getElementById("error"));
-	    	}
+	        }
 	    } else {
 	        document.getElementById("error").innerHTML= "<pre>Returned status code: " + this.status + "\n" + this.responseText + "</pre>";
 	        show(document.getElementById("error"));
