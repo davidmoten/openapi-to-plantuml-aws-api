@@ -174,19 +174,19 @@ Resources:
                   content:
                     application/json:
                       schema:
-                        $ref: "#/components/schemas/Empty"
+                        $ref: "#/components/schemas/PlantUml"
                 "400":
                   description: "400 response - Bad Request"
                   content:
                     application/json:
                       schema:
-                        $ref: "#/components/schemas/Empty"
+                        $ref: "#/components/schemas/Error"
                 "500":
                   description: "500 response - Server Exception"
                   content:
                     application/json:
                       schema:
-                        $ref: "#/components/schemas/Empty"
+                        $ref: "#/components/schemas/Error"
               security: []   # No security
               x-amazon-apigateway-integration:
                 responses:
@@ -231,6 +231,13 @@ Resources:
                 
         components:
           schemas:
+            PlantUml:
+              type: object
+              properties:
+                puml:
+                  type: string
+                encoded:
+                  type: string
             Error:
               type: object
               properties:
