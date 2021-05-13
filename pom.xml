@@ -10,7 +10,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <server.id>my.aws</server.id>
         <region>ap-southeast-2</region>
-        <application>oas3puml</application>
+        <application>oas3puml2</application>
         <artifact.bucket>${application}-artifacts</artifact.bucket>
         <proxy.host></proxy.host>
         <!-- as long as proxy.host is blank this property won't be used -->
