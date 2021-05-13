@@ -48,7 +48,7 @@ function convert() {
 		        show(document.getElementById("response"));
 	        }
 	    } else {
-	        document.getElementById("error").innerHTML= "<pre>Returned status code: " + this.status + "\n" + this.responseText + "</pre>";
+	        document.getElementById("error").innerHTML= "<pre>Returned status code: " + this.status + "\n" + JSON.stringify(JSON.parse(this.responseText), null, 4) + "</pre>";
 	        show(document.getElementById("error"));
 	    }
     };
