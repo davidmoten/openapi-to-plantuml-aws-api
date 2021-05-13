@@ -169,19 +169,21 @@ Resources:
                      schema:
                        $ref: '#/components/schemas/StringValue'
               responses:
-                "200":
+                '200':
                   description: "200 response"
                   content:
                     application/json:
                       schema:
+                        # a limitation of Api Gateway is that a $ref must be used here
                         $ref: "#/components/schemas/PlantUml"
-                "400":
+                '400':
                   description: "400 response - Bad Request"
                   content:
                     application/json:
                       schema:
+                        # a limitation of Api Gateway is that a $ref must be used here
                         $ref: "#/components/schemas/Error"
-                "500":
+                '500':
                   description: "500 response - Server Exception"
                   content:
                     application/json:
