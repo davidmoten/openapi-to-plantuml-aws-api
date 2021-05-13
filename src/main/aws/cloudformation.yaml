@@ -196,6 +196,9 @@ Resources:
                     statusCode: "500"
                   default:
                     statusCode: "200"
+                    responseTemplates:
+                      ## this bit of weirdness is so quoted text doesn't get returned (json)
+                      application/json: "#set($inputRoot = $input.path('$')) \n$inputRoot"
                 requestTemplates:
                   application/yaml: "##  See http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html\n\
                     ##  This template will pass through all parameters including path, querystring,\
