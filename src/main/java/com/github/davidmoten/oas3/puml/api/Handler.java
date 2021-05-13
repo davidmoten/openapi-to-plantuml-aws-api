@@ -2,25 +2,20 @@ package com.github.davidmoten.oas3.puml.api;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.github.davidmoten.oas3.puml.Converter;
 
 import net.sourceforge.plantuml.code.TranscoderSmart2;
 
-public final class Handler {
+public final class Handler implements RequestHandler<Map<String, Object>, String> {
 
-    public String handle(Map<String, Object> input, Context context) {
-
-        // expects full request body passthrough from api gateway integration
-        // request
+    @Override
+    public String handleRequest(Map<String, Object> input, Context context) {
 
         // when a null body is passed `input.get("body-json") returns a LinkedHashMap
         // not a String (assumes encoded parameters perhaps?)
@@ -50,22 +45,10 @@ public final class Handler {
             String encoded = new TranscoderSmart2().encode(puml);
             return "{\"puml\":\"" + escapeForJson(puml) + "\",\n" //
                     + "\"encoded\":\"" + escapeForJson(encoded) + "\"}";
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("BadRequest: " + e.getMessage(), e);
         } catch (Throwable e) {
-            // thrown error json created by lambda infrastructure is invalid in testing so building it ourselves:
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put("errorMessage", "Bad Request: " + String.valueOf(e.getMessage()));
-            node.put("errorType", e.getClass().getName());
-            ArrayNode array = node.putArray("stackTrace");
-            for (String line: ExceptionUtils.getStackTrace(e).split("\n")) {
-                array.add(line);
-            }
-            try {
-                return mapper.writeValueAsString(node);
-            } catch (JsonProcessingException e1) {
-                // shouldn't happen fingers crossed
-                throw new RuntimeException(e1);
-            }
+            throw new RuntimeException("ServerException: " + e.getMessage(), e);
         }
     }
 
