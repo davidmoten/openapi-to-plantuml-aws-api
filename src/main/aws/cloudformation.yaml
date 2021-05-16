@@ -264,7 +264,7 @@ Resources:
   myDomainName:
     Type: 'AWS::ApiGatewayV2::DomainName'
     Properties:
-      DomainName: openapi-to-puml.davidmoten.org
+      DomainName: !Sub "${domainName}" # openapi-to-puml.davidmoten.org
       DomainNameConfigurations:
         - EndpointType: REGIONAL
           CertificateArn: arn:aws:acm:ap-southeast-2:791394749990:certificate/3f65b280-6024-47d4-a36d-0d75623adc65
@@ -281,7 +281,7 @@ Resources:
     Properties:
       HostedZoneId: Z2OZJPF5WNAGIT
       RecordSets:
-        - Name: openapi-to-puml.davidmoten.org # Your chosen subdomain
+        - Name: !Sub "${domainName}" # Your chosen subdomain
           Type: A
           AliasTarget:
             HostedZoneId: !GetAtt myDomainName.RegionalHostedZoneId
