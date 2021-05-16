@@ -276,3 +276,13 @@ Resources:
       DomainName: !Ref myDomainName
       RestApiId: !Ref RestApi
           
+  Route53RecordSetGroup:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: Z2OZJPF5WNAGIT
+      RecordSets:
+        - Name: openapi-to-puml.davidmoten.org # Your chosen subdomain
+          Type: A
+          AliasTarget:
+            HostedZoneId: !GetAtt myDomainName.RegionalHostedZoneId
+            DNSName: !GetAtt myDomainName.RegionalDomainName
