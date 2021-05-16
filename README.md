@@ -26,7 +26,4 @@ The deploy script does these steps:
 * generate cert for new domain in AWS Certificate Manager
 * set new domain as alias for apig hostname
 * associate new cert with apig
-
-Then you finish up configuring the new domain name in Route 53 manually (TODO: do this in CloudFormation too):
-
-* Go to Route 53 and add new domain name (as per AWS Certificate Manager) of type A, Alias = Yes, select API Gateway from the dropdown and then select the API Gateway domain name (which is also visible in API Gateway - Custom Domain Names).
+* create Route53 recordset to associate domain name with api gateway
