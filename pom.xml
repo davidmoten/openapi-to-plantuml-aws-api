@@ -5,7 +5,7 @@
     <groupId>com.github.davidmoten</groupId>
     <artifactId>openapi-to-plantuml-aws-api</artifactId>
     <name>${project.artifactId}</name>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <server.id>my.aws</server.id>
