@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.github.davidmoten.oas3.puml.Converter;
 
-import net.sourceforge.plantuml.code.TranscoderSmart2;
+import net.sourceforge.plantuml.code.TranscoderSmart;
 
 public final class Handler implements RequestHandler<Map<String, Object>, String> {
 
@@ -42,7 +42,7 @@ public final class Handler implements RequestHandler<Map<String, Object>, String
                 yaml = body;
             }
             String puml = Converter.openApiToPuml(yaml);
-            String encoded = new TranscoderSmart2().encode(puml);
+            String encoded = new TranscoderSmart().encode(puml);
             return "{\"puml\":\"" + escapeForJson(puml) + "\",\n" //
                     + "\"encoded\":\"" + escapeForJson(encoded) + "\"}";
         } catch (IllegalArgumentException e) {
