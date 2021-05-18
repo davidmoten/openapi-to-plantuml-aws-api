@@ -49,6 +49,34 @@
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>filter-webapp</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/filtered-webapp</outputDirectory>
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>png</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>yml</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>js</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/webapp</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.github.davidmoten</groupId>
                 <artifactId>aws-maven-plugin</artifactId>
                 <version>0.2.29</version>
@@ -76,7 +104,7 @@
                             <region>${region}</region>
                             <bucketName>${siteBucketName}</bucketName>
                             <create>true</create>
-                            <file>src/main/webapp/index.html</file>
+                            <file>target/filtered-webapp/index.html</file>
                             <objectName>index.html</objectName>
                             <!-- optional proxy config -->
                             <httpsProxyHost>${proxy.host}</httpsProxyHost>
