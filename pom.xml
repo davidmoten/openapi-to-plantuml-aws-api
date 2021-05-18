@@ -59,7 +59,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/filtered-webapp</outputDirectory>
+                            <outputDirectory>${project.build.directory}/filtered-webapp</outputDirectory>
                             <nonFilteredFileExtensions>
                                 <nonFilteredFileExtension>svg</nonFilteredFileExtension>
                                 <nonFilteredFileExtension>png</nonFilteredFileExtension>
@@ -89,23 +89,6 @@
                         <configuration>
                             <serverId>${server.id}</serverId>
                             <region>${region}</region>
-                            <!-- optional proxy config -->
-                            <httpsProxyHost>${proxy.host}</httpsProxyHost>
-                            <httpsProxyPort>${proxy.port}</httpsProxyPort>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>public-website</id>
-                        <goals>
-                            <goal>deployFileS3</goal>
-                        </goals>
-                        <configuration>
-                            <serverId>${server.id}</serverId>
-                            <region>${region}</region>
-                            <bucketName>${siteBucketName}</bucketName>
-                            <create>true</create>
-                            <file>target/filtered-webapp/index.html</file>
-                            <objectName>index.html</objectName>
                             <!-- optional proxy config -->
                             <httpsProxyHost>${proxy.host}</httpsProxyHost>
                             <httpsProxyPort>${proxy.port}</httpsProxyPort>
@@ -178,7 +161,7 @@
                         <configuration>
                             <serverId>${server.id}</serverId>
                             <region>${region}</region>
-                            <inputDirectory>src/main/webapp</inputDirectory>
+                            <inputDirectory>${project.build.directory}/filtered-webapp</inputDirectory>
                             <bucketName>${siteBucketName}</bucketName>
                             <outputBasePath></outputBasePath>
                             <publicRead>true</publicRead>
