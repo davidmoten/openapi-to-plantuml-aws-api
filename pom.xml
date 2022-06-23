@@ -79,7 +79,7 @@
             <plugin>
                 <groupId>com.github.davidmoten</groupId>
                 <artifactId>aws-maven-plugin</artifactId>
-                <version>0.2.32</version>
+                <version>0.2.33</version>
                 <executions>
                     <execution>
                         <id>prop</id>
