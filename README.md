@@ -1,4 +1,5 @@
 # openapi-to-plantuml-aws-api
+<a href="https://github.com/davidmoten/openapi-to-plantuml-aws-api/actions/workflows/ci.yml"><img src="https://github.com/davidmoten/openapi-to-plantuml-aws-api/actions/workflows/ci.yml/badge.svg"/></a><br/>
 
 This is the source for https://openapi-to-puml.davidmoten.org/prod/site/index.html which converts OpenAPI definitions to PlantUML online. The site uses AWS API Gateway with Lambda and S3 integrations.
 
