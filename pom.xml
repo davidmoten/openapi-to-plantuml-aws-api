@@ -5,7 +5,7 @@
     <groupId>com.github.davidmoten</groupId>
     <artifactId>openapi-to-plantuml-aws-api</artifactId>
     <name>${project.artifactId}</name>
-    <version>0.1.20</version>
+    <version>0.1.20-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <server.id>my.aws</server.id>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>openapi-to-plantuml</artifactId>
-            <version>0.1.20</version>
+            <version>0.1.19</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.plantuml</groupId>
