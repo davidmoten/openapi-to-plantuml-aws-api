@@ -31,6 +31,7 @@ public final class Handler implements RequestHandler<Map<String, Object>, String
             }
             final String yaml;
             if (body.trim().startsWith("{")) {
+                //TODO bodyJson may be a LinkedHashMap when json passed. If so this won't be called
                 JsonNode jsonNodeTree;
                 try {
                     jsonNodeTree = new ObjectMapper().readTree(body);
