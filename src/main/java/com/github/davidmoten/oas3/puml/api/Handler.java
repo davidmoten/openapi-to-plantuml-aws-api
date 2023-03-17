@@ -13,6 +13,8 @@ import com.github.davidmoten.oas3.puml.Converter;
 import net.sourceforge.plantuml.code.TranscoderSmart;
 
 public final class Handler implements RequestHandler<Map<String, Object>, String> {
+    
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
     public String handleRequest(Map<String, Object> input, Context context) {
@@ -22,25 +24,22 @@ public final class Handler implements RequestHandler<Map<String, Object>, String
 
         try {
             Object bodyJson = input.get("body-json");
-            if (!(bodyJson instanceof String)) {
-                throw new IllegalArgumentException("openapi definition cannot be empty");
-            }
-            String body = (String) bodyJson;
-            if (body == null || body.trim().length() == 0) {
-                throw new IllegalArgumentException("openapi definition cannot be empty");
-            }
             final String yaml;
-            if (body.trim().startsWith("{")) {
-                //TODO bodyJson may be a LinkedHashMap when json passed. If so this won't be called
-                JsonNode jsonNodeTree;
+            if (bodyJson instanceof Map) {
+                Map<?, ?> map = (Map<?, ?>) bodyJson;
                 try {
-                    jsonNodeTree = new ObjectMapper().readTree(body);
-                    yaml = new YAMLMapper().writeValueAsString(jsonNodeTree);
+                    JsonNode jsonNode = MAPPER.valueToTree(map);
+                    yaml = new YAMLMapper().writeValueAsString(jsonNode);
                 } catch (JsonProcessingException e) {
                     throw new IllegalArgumentException(e.getMessage(), e);
                 }
+            } else if (bodyJson instanceof String){
+                yaml = (String) bodyJson;
+                if (yaml == null || yaml.trim().length() == 0) {
+                    throw new IllegalArgumentException("openapi definition cannot be empty");
+                }
             } else {
-                yaml = body;
+                throw new IllegalArgumentException("unexpected body-json: " + bodyJson);
             }
             String puml = Converter.openApiToPuml(yaml);
             String encoded = new TranscoderSmart().encode(puml);
