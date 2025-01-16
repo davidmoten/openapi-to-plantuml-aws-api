@@ -79,6 +79,8 @@ Resources:
         - LambdaFunctionRole
         - Arn
       Runtime: java8.al2
+      SnapStart:
+        ApplyOn: PublishedVersions
       Environment:
         Variables:
           WHO: !Sub "${application}"
