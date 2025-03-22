@@ -30,12 +30,12 @@
         <dependency>
             <groupId>com.github.davidmoten</groupId>
             <artifactId>openapi-to-plantuml</artifactId>
-            <version>0.1.31</version>
+            <version>0.1.32</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.plantuml</groupId>
             <artifactId>plantuml</artifactId>
-            <version>1.2024.8</version>
+            <version>1.2025.2</version>
         </dependency>
 
         <dependency>
