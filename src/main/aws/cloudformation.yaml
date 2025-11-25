@@ -78,7 +78,7 @@ Resources:
       Role: !GetAtt 
         - LambdaFunctionRole
         - Arn
-      Runtime: java8.al2
+      Runtime: java21
       SnapStart:
         ApplyOn: PublishedVersions
       Environment:
